@@ -1,14 +1,22 @@
 package main
 
+import "sync"
+
 func NewInMemoryPlayerStore() *InMemoryPlayerStore {
-	return &InMemoryPlayerStore{map[string]int{}}
+	return &InMemoryPlayerStore{
+		sync.Mutex{},
+		map[string]int{},
+	}
 }
 
 type InMemoryPlayerStore struct {
+	mu    sync.Mutex
 	store map[string]int
 }
 
 func (i *InMemoryPlayerStore) RecordWin(name string) {
+	i.mu.Lock()
+	defer i.mu.Unlock()
 	i.store[name]++
 }
 
