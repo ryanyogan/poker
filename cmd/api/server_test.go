@@ -21,6 +21,20 @@ func (s *StubPlayerStore) RecordWin(name string) {
 	s.winCalls = append(s.winCalls, name)
 }
 
+func TestLeague(t *testing.T) {
+	store := StubPlayerStore{}
+	server := NewPlayerServer(&store)
+
+	t.Run("it returns 200 on /league", func(t *testing.T) {
+		request, _ := http.NewRequest(http.MethodGet, "/league", nil)
+		response := httptest.NewRecorder()
+
+		server.ServeHTTP(response, request)
+
+		assertStatus(t, response.Code, http.StatusOK)
+	})
+}
+
 func TestGETPlayers(t *testing.T) {
 	store := StubPlayerStore{
 		map[string]int{
@@ -30,7 +44,7 @@ func TestGETPlayers(t *testing.T) {
 		nil,
 	}
 
-	server := &PlayerServer{&store}
+	server := NewPlayerServer(&store)
 
 	t.Run("returns Ryan's score", func(t *testing.T) {
 		request := newGetScoreRequest("Ryan")
@@ -66,7 +80,7 @@ func TestScoreWins(t *testing.T) {
 		map[string]int{},
 		nil,
 	}
-	server := &PlayerServer{&store}
+	server := NewPlayerServer(&store)
 
 	t.Run("it returns accepted on POST", func(t *testing.T) {
 		request, _ := http.NewRequest(http.MethodPost, "/players/Ryan", nil)
@@ -83,7 +97,7 @@ func TestStoreWins(t *testing.T) {
 		nil,
 	}
 
-	server := &PlayerServer{&store}
+	server := NewPlayerServer(&store)
 	t.Run("it records wins when POST", func(t *testing.T) {
 		player := "Not Ryan"
 		request := newPostWinRequest(player)
