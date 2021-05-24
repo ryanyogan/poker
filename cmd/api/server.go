@@ -19,7 +19,7 @@ type PlayerServer struct {
 
 type Player struct {
 	Name string
-	Age  int
+	Wins int
 }
 
 func NewPlayerServer(store PlayerStore) *PlayerServer {
