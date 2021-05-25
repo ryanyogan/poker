@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	"yogan.dev/poker"
+	"github.com/ryanyogan/go-poker"
 )
 
 func TestCLI(t *testing.T) {
