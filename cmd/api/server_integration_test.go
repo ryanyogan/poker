@@ -7,9 +7,9 @@ import (
 )
 
 func TestRecordingWinsAndRetreivingThem(t *testing.T) {
-	database, cleanDatabase := createTempFile(t, "")
+	database, cleanDatabase := createTempFile(t, `[]`)
 	defer cleanDatabase()
-	store := NewFileSystemPlayerStore(database)
+	store, err := NewFileSystemPlayerStore(database)
 	server := NewPlayerServer(store)
 	player := "Ryan"
 
@@ -22,6 +22,7 @@ func TestRecordingWinsAndRetreivingThem(t *testing.T) {
 		server.ServeHTTP(response, newGetScoreRequest(player))
 		assertStatus(t, response.Code, http.StatusOK)
 		assertResponseBody(t, response.Body.String(), "3")
+		assertNoError(t, err)
 	})
 
 	t.Run("get league", func(t *testing.T) {
@@ -34,5 +35,6 @@ func TestRecordingWinsAndRetreivingThem(t *testing.T) {
 			{"Ryan", 3},
 		}
 		assertLeague(t, got, want)
+		assertNoError(t, err)
 	})
 }
