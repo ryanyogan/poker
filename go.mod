@@ -1,3 +1,3 @@
-module github.com/ryanyogan/go-poker
+module github.com/ryanyogan/poker
 
 go 1.16
